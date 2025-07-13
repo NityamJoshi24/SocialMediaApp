@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/data/firebase_auth_repo.dart';
 import 'package:social_media_app/features/auth/presentation/cubits/auth_cubit.dart';
 import 'package:social_media_app/features/auth/presentation/cubits/auth_states.dart';
+import 'package:social_media_app/features/profile/data/firebase_profile_repo.dart';
+import 'package:social_media_app/features/profile/presentation/cubits/profile_cubit.dart';
 
 import 'features/auth/presentation/pages/auth_page.dart';
 import 'features/home/presentation/pages/home_page.dart';
@@ -11,13 +13,20 @@ import 'themes/light_mode.dart';
 class MyApp extends StatelessWidget {
   // ignore: non_constant_identifier_names
   final AuthRepo = FirebaseAuthRepo();
+  final profileRepo = FirebaseProfileRepo();
 
   MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthCubit(authRepo: AuthRepo)..checkAuth(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthCubit>(
+          create: (context) => AuthCubit(authRepo: AuthRepo)..checkAuth(),
+        ),
+        BlocProvider<ProfileCubit>(
+            create: (context) => ProfileCubit(profileRepo: profileRepo)),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: lightMode,
