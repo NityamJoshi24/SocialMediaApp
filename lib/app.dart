@@ -5,7 +5,7 @@ import 'package:social_media_app/features/auth/presentation/cubits/auth_cubit.da
 import 'package:social_media_app/features/auth/presentation/cubits/auth_states.dart';
 
 import 'features/auth/presentation/pages/auth_page.dart';
-import 'features/posts/presentation/pages/home_page.dart';
+import 'features/home/presentation/pages/home_page.dart';
 import 'themes/light_mode.dart';
 
 class MyApp extends StatelessWidget {
