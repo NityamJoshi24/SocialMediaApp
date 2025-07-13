@@ -34,12 +34,12 @@ class _RegisterPageState extends State<RegisterPage> {
       if (pw == confirmPw) {
         authCubit.register(name, email, pw);
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Passwords Don't Match")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Passwords Don't Match")));
       }
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Please Complete All Fields")));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please Complete All Fields")));
     }
   }
 

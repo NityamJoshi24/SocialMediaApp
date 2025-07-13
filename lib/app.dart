@@ -9,6 +9,7 @@ import 'features/posts/presentation/pages/home_page.dart';
 import 'themes/light_mode.dart';
 
 class MyApp extends StatelessWidget {
+  // ignore: non_constant_identifier_names
   final AuthRepo = FirebaseAuthRepo();
 
   MyApp({super.key});
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         theme: lightMode,
         home: BlocConsumer<AuthCubit, AuthStates>(
           builder: (context, authState) {
+            // ignore: avoid_print
             print(authState);
 
             if (authState is Unauthenticated) {
