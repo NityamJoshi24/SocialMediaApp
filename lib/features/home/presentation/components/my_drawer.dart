@@ -25,7 +25,7 @@ class MyDrawer extends StatelessWidget {
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-              Divider(),
+              const Divider(),
               MyDrawerTile(
                   icon: Icons.home,
                   onTap: () => Navigator.of(context).pop(),
@@ -48,12 +48,12 @@ class MyDrawer extends StatelessWidget {
                   icon: Icons.search, onTap: () {}, title: "S E A R C H"),
               MyDrawerTile(
                   icon: Icons.settings, onTap: () {}, title: "S E T T I N G S"),
-              Spacer(),
+              const Spacer(),
               MyDrawerTile(
                   icon: Icons.logout_outlined,
                   onTap: () {},
                   title: "L O G O U T"),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               )
             ],

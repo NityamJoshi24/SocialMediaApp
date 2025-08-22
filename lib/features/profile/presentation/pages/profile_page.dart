@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/domain/entities/app_user.dart';
@@ -48,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             builder: (context) => EditProfilePage(
                                   user: user,
                                 ))),
-                    icon: Icon(Icons.edit))
+                    icon: const Icon(Icons.edit))
               ],
             ),
             body: Center(
@@ -61,25 +62,28 @@ class _ProfilePageState extends State<ProfilePage> {
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.primary),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 12,
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.secondary,
-                          borderRadius: BorderRadius.circular(12)),
-                      height: 120,
-                      width: 120,
-                      padding: EdgeInsets.all(25),
-                      child: Center(
-                        child: Icon(
-                          Icons.person,
-                          size: 72,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                    CachedNetworkImage(
+                      imageUrl: user.profileImageURL,
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(
+                        Icons.person,
+                        size: 72,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      imageBuilder: (context, ImageProvider) => Container(
+                        height: 120,
+                        width: 120,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: ImageProvider, fit: BoxFit.cover)),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 25,
                     ),
                     Padding(
@@ -94,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 25,
                     ),
                     BioBox(text: user.bio),
@@ -122,7 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           );
         } else {
-          return Center(
+          return const Center(
             child: Text("No Profile found..."),
           );
         }
