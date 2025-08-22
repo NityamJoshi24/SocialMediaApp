@@ -4,7 +4,7 @@ abstract class ProfileStates {}
 
 class ProfileInitial extends ProfileStates {}
 
-class Profileloading extends ProfileStates {}
+class ProfileLoading extends ProfileStates {}
 
 class ProfileLoaded extends ProfileStates {
   final ProfileUser profileUser;

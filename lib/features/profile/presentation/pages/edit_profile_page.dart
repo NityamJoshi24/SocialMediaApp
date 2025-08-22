@@ -30,7 +30,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return BlocConsumer<ProfileCubit, ProfileStates>(
       builder: (context, state) {
-        if (state is Profileloading) {
+        if (state is ProfileLoading) {
           return const Scaffold(
             body: Center(
               child: Column(

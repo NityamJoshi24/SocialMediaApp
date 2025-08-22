@@ -115,7 +115,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           );
-        } else if (state is Profileloading) {
+        } else if (state is ProfileLoading) {
           return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
