@@ -1,0 +1,92 @@
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_media_app/features/auth/domain/entities/app_user.dart';
+import 'package:social_media_app/features/post/domain/entities/post.dart';
+import '../../../auth/presentation/cubits/auth_cubit.dart';
+import '../cubits/post_cubits.dart';
+
+class UploadPostPage extends StatefulWidget {
+  const UploadPostPage({super.key});
+
+  @override
+  State<UploadPostPage> createState() => _UploadPostPageState();
+}
+
+class _UploadPostPageState extends State<UploadPostPage> {
+  PlatformFile? imagePickedFile;
+  Uint8List? webImage;
+
+  final textController = TextEditingController();
+
+  AppUser? currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    final authCubit = context.read<AuthCubit>();
+    currentUser = authCubit.currentUser;
+  }
+
+  Future<void> pickImage() async {
+    final result = await FilePicker.platform
+        .pickFiles(type: FileType.image, withData: kIsWeb);
+
+    if (result != null) {
+      setState(() {
+        imagePickedFile = result.files.first;
+
+        if (kIsWeb) {
+          webImage = imagePickedFile!.bytes;
+        }
+      });
+    }
+  }
+
+  void uploadPost() {
+    if (imagePickedFile == null || textController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Both Image and Caption are Required")));
+
+      return;
+    }
+
+    final newPost = Post(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        imageUrl: '',
+        text: textController.text,
+        timestamp: DateTime.now(),
+        userId: currentUser!.uid,
+        userName: currentUser!.name);
+
+    final postCubit = context.read<PostCubits>();
+
+    if (kIsWeb) {
+      postCubit.createPost(newPost, imageBytes: imagePickedFile?.bytes);
+    } else {
+      postCubit.createPost(newPost, imagePath: imagePickedFile?.path);
+    }
+  }
+
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Create Post"),
+        foregroundColor: Theme.of(context).colorScheme.primary,
+      ),
+    );
+  }
+}
