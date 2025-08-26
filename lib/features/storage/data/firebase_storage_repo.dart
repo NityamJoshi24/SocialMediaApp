@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:social_media_app/features/post/presentation/pages/upload_post_page.dart';
 import 'package:social_media_app/features/storage/domain/storage_repo.dart';
 
 class FirebaseStorageRepo implements StorageRepo {
@@ -15,6 +16,14 @@ class FirebaseStorageRepo implements StorageRepo {
   @override
   Future<String?> uploadProfileImageWeb(Uint8List fileBytes, String fileName) {
     return _uploadFileByte(fileBytes, fileName, "profile_images");
+  }
+
+  Future<String?> uploadPostImageMobile(String path, String fileName) {
+    return _uploadFile(path, fileName, "post_images");
+  }
+
+  Future<String?> uploadPostImageWeb(Uint8List fileBytes, String fileName) {
+    return _uploadFileByte(fileBytes, fileName, "post_images");
   }
 
   Future<String?> _uploadFile(

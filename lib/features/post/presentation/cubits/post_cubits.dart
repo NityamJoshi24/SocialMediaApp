@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import '../../domain/entities/post.dart';
 class PostCubits extends Cubit<PostStates> {
   final PostRepo postRepo;
   final StorageRepo storageRepo;
+  StreamSubscription<List<Post>>? _postsSub;
 
   PostCubits({required this.postRepo, required this.storageRepo})
       : super(PostsInitial());
@@ -19,18 +21,17 @@ class PostCubits extends Cubit<PostStates> {
     String? imageUrl;
 
     try {
+      emit(PostUploading());
       if (imagePath != null) {
-        emit(PostUploading());
-        imageUrl =
-            await storageRepo.uploadProfileImageMobile(imagePath, post.id);
+        imageUrl = await storageRepo.uploadPostImageMobile(imagePath, post.id);
       } else if (imageBytes != null) {
-        emit(PostUploading());
-        imageUrl = await storageRepo.uploadProfileImageWeb(imageBytes, post.id);
+        imageUrl = await storageRepo.uploadPostImageWeb(imageBytes, post.id);
       }
 
       final newPost = post.copyWith(imageUrl: imageUrl);
 
-      postRepo.createPost(newPost);
+      await postRepo.createPost(newPost);
+      // No need to emit here; the watcher will push PostLoaded shortly
     } catch (e) {
       emit(PostsError("Failed to Create Post: $e"));
     }
@@ -46,9 +47,27 @@ class PostCubits extends Cubit<PostStates> {
     }
   }
 
+  void watchPosts() {
+    _postsSub?.cancel();
+    emit(PostsLoading());
+    _postsSub = postRepo.watchAllPosts().listen((posts) {
+      emit(PostLoaded(posts));
+    }, onError: (e) {
+      emit(PostsError("Failed to Watch Posts: $e"));
+    });
+  }
+
   Future<void> deletePost(String postId) async {
     try {
       await postRepo.deletePost(postId);
-    } catch (e) {}
+    } catch (e) {
+      emit(PostsError("Failed to Delete Post: $e"));
+    }
+  }
+
+  @override
+  Future<void> close() {
+    _postsSub?.cancel();
+    return super.close();
   }
 }

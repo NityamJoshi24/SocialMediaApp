@@ -1,10 +1,13 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/domain/entities/app_user.dart';
+import 'package:social_media_app/features/auth/presentation/components/my_text_field.dart';
 import 'package:social_media_app/features/post/domain/entities/post.dart';
+import 'package:social_media_app/features/post/presentation/cubits/post_states.dart';
 import '../../../auth/presentation/cubits/auth_cubit.dart';
 import '../cubits/post_cubits.dart';
 
@@ -82,10 +85,53 @@ class _UploadPostPageState extends State<UploadPostPage> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<PostCubits, PostStates>(
+      builder: (context, state) {
+        print(state);
+        if (state is PostUploading) {
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+
+        return buildUploadPage();
+      },
+      listener: (context, state) {
+        if (state is PostLoaded) {
+          Navigator.pop(context);
+        }
+      },
+    );
+  }
+
+  Widget buildUploadPage() {
     return Scaffold(
       appBar: AppBar(
         title: Text("Create Post"),
         foregroundColor: Theme.of(context).colorScheme.primary,
+        actions: [IconButton(onPressed: uploadPost, icon: Icon(Icons.upload))],
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              if (kIsWeb && webImage != null) Image.memory(webImage!),
+              if (!kIsWeb && imagePickedFile != null)
+                Image.file(File(imagePickedFile!.path!)),
+              MaterialButton(
+                onPressed: pickImage,
+                color: Colors.blue,
+                child: Text("Pick Image"),
+              ),
+              MyTextField(
+                  controller: textController,
+                  hintText: "Caption",
+                  obscureText: false),
+            ],
+          ),
+        ),
       ),
     );
   }

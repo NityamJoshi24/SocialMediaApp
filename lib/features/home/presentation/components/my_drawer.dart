@@ -51,7 +51,14 @@ class MyDrawer extends StatelessWidget {
               const Spacer(),
               MyDrawerTile(
                   icon: Icons.logout_outlined,
-                  onTap: () {},
+                  onTap: () {
+                    // Close the drawer first
+                    Navigator.of(context).pop();
+                    // Pop all routes to ensure we return to the root
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    // Trigger logout; app routing listens to auth state
+                    context.read<AuthCubit>().logout();
+                  },
                   title: "L O G O U T"),
               const SizedBox(
                 height: 30,

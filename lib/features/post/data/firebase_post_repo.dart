@@ -32,10 +32,52 @@ class FirebasePostRepo implements PostRepo {
           .map((doc) => Post.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
 
-      return allPosts;
+      return await _filterPostsByExistingUsers(allPosts);
     } catch (e) {
       throw Exception("Error fetching post: $e");
     }
+  }
+
+  @override
+  Stream<List<Post>> watchAllPosts() {
+    return postsCollection
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .asyncMap((snapshot) async {
+      final posts = snapshot.docs
+          .map((doc) => Post.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+      return _filterPostsByExistingUsers(posts);
+    });
+  }
+
+  Future<List<Post>> _filterPostsByExistingUsers(List<Post> posts) async {
+    if (posts.isEmpty) return posts;
+
+    final uniqueUserIds = posts.map((p) => p.userId).toSet().toList();
+
+    // DEBUG: Log userIds encountered
+    // ignore: avoid_print
+    print('[Posts] filtering by userIds: ' + uniqueUserIds.join(','));
+
+    // Firestore whereIn limit is 10, so we batch queries
+    final List<String> userIds = uniqueUserIds;
+    final List<String> existingUserIds = [];
+
+    for (int i = 0; i < userIds.length; i += 10) {
+      final chunk = userIds.sublist(i, i + 10 > userIds.length ? userIds.length : i + 10);
+      final querySnap = await firestore
+          .collection('users')
+          .where(FieldPath.documentId, whereIn: chunk)
+          .get();
+      existingUserIds.addAll(querySnap.docs.map((d) => d.id));
+    }
+
+    final Set<String> existingSet = existingUserIds.toSet();
+    // DEBUG: Log which userIds exist
+    // ignore: avoid_print
+    print('[Posts] existing userIds: ' + existingSet.join(','));
+    return posts.where((p) => existingSet.contains(p.userId)).toList();
   }
 
   @override

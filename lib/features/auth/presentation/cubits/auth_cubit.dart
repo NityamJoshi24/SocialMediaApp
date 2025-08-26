@@ -55,7 +55,12 @@ class AuthCubit extends Cubit<AuthStates> {
   }
 
   Future<void> logout() async {
-    authRepo.logout();
-    emit(Unauthenticated());
+    try {
+      await authRepo.logout(); // wait for Firebase to sign out
+      _currentUser = null; // clear local user
+      emit(Unauthenticated());
+    } catch (e) {
+      emit(AuthError("Logout failed: $e"));
+    }
   }
 }

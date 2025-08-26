@@ -13,10 +13,31 @@ class FirebaseAuthRepo implements AuthRepo {
       UserCredential userCredential = await firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
 
-      AppUser user =
-          AppUser(email: email, name: '', uid: userCredential.user!.uid);
+      final String uid = userCredential.user!.uid;
 
-      return user;
+      // Read from the correct collection and handle missing docs
+      DocumentSnapshot<Map<String, dynamic>> userDoc =
+          await firebaseFirestore.collection('users').doc(uid).get();
+
+      String resolvedName;
+      if (userDoc.exists) {
+        final data = userDoc.data();
+        resolvedName = (data != null && data['name'] is String)
+            ? data['name'] as String
+            : '';
+      } else {
+        // Fallback: try Firebase displayName or email prefix
+        final displayName = userCredential.user!.displayName;
+        resolvedName = displayName ?? email.split('@').first;
+        // Optionally create the missing user document to keep data consistent
+        await firebaseFirestore.collection('users').doc(uid).set({
+          'uid': uid,
+          'email': email,
+          'name': resolvedName,
+        }, SetOptions(merge: true));
+      }
+
+      return AppUser(email: email, name: resolvedName, uid: uid);
     } catch (e) {
       throw Exception('Login Failed: $e');
     }
@@ -39,7 +60,7 @@ class FirebaseAuthRepo implements AuthRepo {
 
       return user;
     } catch (e) {
-      throw Exception('Login Failed: $e');
+      throw Exception('Register Failed: $e');
     }
   }
 
@@ -56,6 +77,16 @@ class FirebaseAuthRepo implements AuthRepo {
       return null;
     }
 
-    return AppUser(email: firebaseUser.email!, name: '', uid: firebaseUser.uid);
+    DocumentSnapshot userDoc =
+        await firebaseFirestore.collection("users").doc(firebaseUser.uid).get();
+
+    if (!userDoc.exists) {
+      return null;
+    }
+
+    return AppUser(
+        email: firebaseUser.email!,
+        name: userDoc['name'],
+        uid: firebaseUser.uid);
   }
 }

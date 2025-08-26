@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_media_app/features/profile/domain/entities/profile_user.dart';
 import 'package:social_media_app/features/profile/domain/repo/profile_repo.dart';
 import 'package:social_media_app/features/profile/presentation/cubits/profile_states.dart';
 import 'package:social_media_app/features/storage/domain/storage_repo.dart';
@@ -25,6 +26,11 @@ class ProfileCubit extends Cubit<ProfileStates> {
     } catch (e) {
       emit(ProfileError(message: "User Not Found"));
     }
+  }
+
+  Future<ProfileUser?> getUserProfile(String uid) async {
+    final user = await profileRepo.fetchUserProfile(uid);
+    return user;
   }
 
   Future<void> updateProfile(

@@ -11,6 +11,9 @@ class PostUploading extends PostStates {}
 class PostsError extends PostStates {
   final String message;
   PostsError(this.message);
+
+  @override
+  String toString() => 'PostsError: $message';
 }
 
 class PostLoaded extends PostStates {

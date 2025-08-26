@@ -31,7 +31,7 @@ class Post {
     return {
       'id': id,
       'userId': userId,
-      'name': userName,
+      'userName': userName,
       'text': text,
       'imageUrl': imageUrl,
       'timestamp': Timestamp.fromDate(timestamp),
@@ -40,11 +40,14 @@ class Post {
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-        id: json['id'],
-        imageUrl: json['imageUrl'],
-        text: json['text'],
-        timestamp: (json['timestamp'] as Timestamp).toDate(),
-        userId: json['userId'],
-        userName: json['userName']);
+      id: json['id']?.toString() ?? '',
+      imageUrl: json['imageUrl']?.toString() ?? '',
+      text: json['text']?.toString() ?? '',
+      timestamp: (json['timestamp'] is Timestamp)
+          ? (json['timestamp'] as Timestamp).toDate()
+          : DateTime.now(), // fallback
+      userId: json['userId']?.toString() ?? '',
+      userName: json['userName']?.toString() ?? '',
+    );
   }
 }
