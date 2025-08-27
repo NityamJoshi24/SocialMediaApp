@@ -7,8 +7,11 @@ import 'package:social_media_app/features/post/presentation/components/post_tile
 import 'package:social_media_app/features/post/presentation/cubits/post_cubits.dart';
 import 'package:social_media_app/features/post/presentation/cubits/post_states.dart';
 import 'package:social_media_app/features/profile/presentation/components/bio_box.dart';
+import 'package:social_media_app/features/profile/presentation/components/follow_button.dart';
+import 'package:social_media_app/features/profile/presentation/components/profile_stats.dart';
 import 'package:social_media_app/features/profile/presentation/cubits/profile_cubit.dart';
 import 'package:social_media_app/features/profile/presentation/cubits/profile_states.dart';
+import 'package:social_media_app/features/profile/presentation/pages/follower_page.dart';
 
 import 'edit_profile_page.dart';
 
@@ -35,8 +38,36 @@ class _ProfilePageState extends State<ProfilePage> {
     profileCubit.fetchUserProfile(widget.uid);
   }
 
+  void followButtonPressed() {
+    final profileState = profileCubit.state;
+    if (profileState is! ProfileLoaded) {
+      return;
+    }
+
+    final profileUser = profileState.profileUser;
+    final isFollowing = profileUser.followers.contains(currentUser);
+
+    setState(() {
+      if (isFollowing) {
+        profileUser.followers.remove(currentUser!.uid);
+      } else {
+        profileUser.followers.add(currentUser!.uid);
+      }
+    });
+
+    profileCubit.toggleFollow(currentUser!.uid, widget.uid).catchError((error) {
+      if (isFollowing) {
+        profileUser.followers.add(currentUser!.uid);
+      } else {
+        profileUser.followers.remove(currentUser!.uid);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool isOwnPost = (widget.uid == currentUser!.uid);
+
     return BlocBuilder<ProfileCubit, ProfileStates>(
       builder: (context, state) {
         if (state is ProfileLoaded) {
@@ -47,14 +78,15 @@ class _ProfilePageState extends State<ProfilePage> {
               title: Text(user.name),
               foregroundColor: Theme.of(context).colorScheme.primary,
               actions: [
-                IconButton(
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => EditProfilePage(
-                                  user: user,
-                                ))),
-                    icon: const Icon(Icons.edit))
+                if (isOwnPost)
+                  IconButton(
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditProfilePage(
+                                    user: user,
+                                  ))),
+                      icon: const Icon(Icons.edit))
               ],
             ),
             body: ListView(
@@ -90,6 +122,23 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(
                   height: 25,
                 ),
+                ProfileStats(
+                    followerCount: user.followers.length,
+                    followingCount: user.following.length,
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FollowerPage(
+                                followers: user.followers,
+                                following: user.following))),
+                    postCount: postCount),
+                if (!isOwnPost)
+                  FollowButton(
+                      isFollowing: user.followers.contains(currentUser!.uid),
+                      onPressed: followButtonPressed),
+                SizedBox(
+                  height: 25,
+                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 25.0),
                   child: Row(
@@ -103,7 +152,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 const SizedBox(
-                  height: 25,
+                  height: 10,
                 ),
                 BioBox(text: user.bio),
                 Padding(

@@ -3,13 +3,18 @@ import 'package:social_media_app/features/auth/domain/entities/app_user.dart';
 class ProfileUser extends AppUser {
   final String bio;
   final String profileImageURL;
+  final List<String> followers;
+  final List<String> following;
 
-  ProfileUser(
-      {required super.uid,
-      required super.email,
-      required super.name,
-      required this.bio,
-      required this.profileImageURL});
+  ProfileUser({
+    required super.uid,
+    required super.email,
+    required super.name,
+    required this.bio,
+    required this.profileImageURL,
+    required this.followers,
+    required this.following,
+  });
 
   ProfileUser copyWith({
     String? uid,
@@ -17,6 +22,8 @@ class ProfileUser extends AppUser {
     String? name,
     String? bio,
     String? profileImageURL,
+    List<String>? newFollowers,
+    List<String>? newFollowing,
   }) {
     return ProfileUser(
       uid: uid ?? this.uid,
@@ -24,6 +31,8 @@ class ProfileUser extends AppUser {
       name: name ?? this.name,
       bio: bio ?? this.bio,
       profileImageURL: profileImageURL ?? this.profileImageURL,
+      following: newFollowing ?? followers,
+      followers: newFollowers ?? following,
     );
   }
 
@@ -35,6 +44,8 @@ class ProfileUser extends AppUser {
       'name': name,
       'bio': bio,
       'profileImageURL': profileImageURL,
+      'followers': followers,
+      'following': following,
     };
   }
 
@@ -45,6 +56,8 @@ class ProfileUser extends AppUser {
       name: json['name'],
       bio: json['bio'] ?? '',
       profileImageURL: json['profileImageURL'] ?? '',
+      followers: List<String>.from(json['followers'] ?? []),
+      following: List<String>.from(json['following'] ?? []),
     );
   }
 }
