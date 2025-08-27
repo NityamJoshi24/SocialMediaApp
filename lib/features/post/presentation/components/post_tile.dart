@@ -2,10 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/domain/entities/app_user.dart';
+import 'package:social_media_app/features/auth/presentation/components/my_text_field.dart';
 import 'package:social_media_app/features/auth/presentation/cubits/auth_cubit.dart';
+import 'package:social_media_app/features/post/domain/entities/comment.dart';
+import 'package:social_media_app/features/post/presentation/components/comment_tile.dart';
 import 'package:social_media_app/features/post/presentation/cubits/post_cubits.dart';
+import 'package:social_media_app/features/post/presentation/cubits/post_states.dart';
 import 'package:social_media_app/features/profile/domain/entities/profile_user.dart';
 import 'package:social_media_app/features/profile/presentation/cubits/profile_cubit.dart';
+import 'package:social_media_app/features/profile/presentation/pages/profile_page.dart';
 
 import '../../domain/entities/post.dart';
 
@@ -81,6 +86,51 @@ class _PostTileState extends State<PostTile> {
     });
   }
 
+  final commentTextController = TextEditingController();
+
+  void openNewCommentBox() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Add a new comment"),
+              content: MyTextField(
+                  controller: commentTextController,
+                  hintText: "Type a comment",
+                  obscureText: false),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text("Cancel")),
+                TextButton(
+                    onPressed: () {
+                      addComment();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Add")),
+              ],
+            ));
+  }
+
+  void addComment() {
+    final newComment = Comment(
+        id: DateTime.now().microsecondsSinceEpoch.toString(),
+        postId: widget.post.id,
+        text: commentTextController.text,
+        timestamp: DateTime.now(),
+        userId: currentUser!.uid,
+        userName: currentUser!.name);
+
+    if (commentTextController.text.isNotEmpty) {
+      postCubit.addComment(widget.post.id, newComment);
+    }
+  }
+
+  @override
+  void dispose() {
+    commentTextController.dispose();
+    super.dispose();
+  }
+
   void showOptions() {
     showDialog(
       context: context,
@@ -111,46 +161,53 @@ class _PostTileState extends State<PostTile> {
       color: Theme.of(context).colorScheme.secondary,
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                postUser != null && postUser!.profileImageURL.isNotEmpty
-                    ? CachedNetworkImage(
-                        imageUrl: postUser!.profileImageURL,
-                        errorWidget: (context, url, error) =>
-                            Icon(Icons.person),
-                        imageBuilder: (context, imageProvider) => Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.cover)),
-                        ),
-                      )
-                    : Icon(Icons.person),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  postUser?.name ?? widget.post.userName,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontWeight: FontWeight.bold,
+          GestureDetector(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ProfilePage(uid: widget.post.userId))),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  postUser != null && postUser!.profileImageURL.isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: postUser!.profileImageURL,
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.person),
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.cover)),
+                          ),
+                        )
+                      : Icon(Icons.person),
+                  SizedBox(
+                    width: 10,
                   ),
-                ),
-                Spacer(),
-                if (isOwnPost)
-                  GestureDetector(
-                    onTap: showOptions,
-                    child: Icon(
-                      Icons.delete,
-                      color: Theme.of(context).colorScheme.primary,
+                  Text(
+                    postUser?.name ?? widget.post.userName,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-              ],
+                  Spacer(),
+                  if (isOwnPost)
+                    GestureDetector(
+                      onTap: showOptions,
+                      child: Icon(
+                        Icons.delete,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
           CachedNetworkImage(
@@ -193,13 +250,82 @@ class _PostTileState extends State<PostTile> {
                     ],
                   ),
                 ),
-                Icon(Icons.comment),
-                Text("0"),
+                GestureDetector(
+                    onTap: openNewCommentBox,
+                    child: Icon(
+                      Icons.comment,
+                      color: Theme.of(context).colorScheme.primary,
+                    )),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  widget.post.comments.length.toString(),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: 12),
+                ),
                 Spacer(),
                 Text(widget.post.timestamp.toString())
               ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+            child: Row(
+              children: [
+                Text(
+                  widget.post.userName,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  widget.post.text,
+                ),
+              ],
+            ),
+          ),
+          BlocBuilder<PostCubits, PostStates>(
+            builder: (context, state) {
+              if (state is PostLoaded) {
+                final post = state.posts.firstWhere(
+                  (post) => (post.id == widget.post.id),
+                );
+
+                if (post.comments.isNotEmpty) {
+                  int showCommentCount = post.comments.length;
+
+                  return ListView.builder(
+                      itemCount: showCommentCount,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        final comment = post.comments[index];
+
+                        return CommentTile(comment: comment);
+                      });
+                }
+              }
+
+              if (state is PostsLoading) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state is PostsError) {
+                return Center(
+                  child: Text(state.message),
+                );
+              } else {
+                return Center(
+                  child: SizedBox(),
+                );
+              }
+            },
+          )
         ],
       ),
     );
