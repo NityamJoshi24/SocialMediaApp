@@ -65,7 +65,8 @@ class FirebasePostRepo implements PostRepo {
     final List<String> existingUserIds = [];
 
     for (int i = 0; i < userIds.length; i += 10) {
-      final chunk = userIds.sublist(i, i + 10 > userIds.length ? userIds.length : i + 10);
+      final chunk =
+          userIds.sublist(i, i + 10 > userIds.length ? userIds.length : i + 10);
       final querySnap = await firestore
           .collection('users')
           .where(FieldPath.documentId, whereIn: chunk)
@@ -93,6 +94,33 @@ class FirebasePostRepo implements PostRepo {
       return userPosts;
     } catch (e) {
       throw Exception("Error fetching post: $e");
+    }
+  }
+
+  @override
+  Future<void> toggleLikePost(String postId, String userId) async {
+    try {
+      final postDoc = await postsCollection.doc(postId).get();
+
+      if (postDoc.exists) {
+        final post = Post.fromJson(postDoc.data() as Map<String, dynamic>);
+
+        final hasLiked = post.likes.contains(userId);
+
+        if (hasLiked) {
+          post.likes.remove(userId);
+        } else {
+          post.likes.add(userId);
+        }
+
+        await postsCollection.doc(postId).update({
+          'likes': post.likes,
+        });
+      } else {
+        throw Exception("Post not Found");
+      }
+    } catch (e) {
+      throw Exception("Error toggling like: $e");
     }
   }
 }

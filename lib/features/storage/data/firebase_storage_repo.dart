@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:social_media_app/features/post/presentation/pages/upload_post_page.dart';
 import 'package:social_media_app/features/storage/domain/storage_repo.dart';
 
 class FirebaseStorageRepo implements StorageRepo {
