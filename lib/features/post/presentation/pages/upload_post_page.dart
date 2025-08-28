@@ -1,3 +1,5 @@
+// ignore_for_file: annotate_overrides
+
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -57,7 +59,7 @@ class _UploadPostPageState extends State<UploadPostPage> {
   void uploadPost() {
     if (imagePickedFile == null || textController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Both Image and Caption are Required")));
+          const SnackBar(content: Text("Both Image and Caption are Required")));
 
       return;
     }
@@ -90,9 +92,8 @@ class _UploadPostPageState extends State<UploadPostPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<PostCubits, PostStates>(
       builder: (context, state) {
-        print(state);
         if (state is PostUploading) {
-          return Scaffold(
+          return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
             ),
@@ -112,9 +113,11 @@ class _UploadPostPageState extends State<UploadPostPage> {
   Widget buildUploadPage() {
     return ConstrainedScaffold(
       appBar: AppBar(
-        title: Text("Create Post"),
+        title: const Text("Create Post"),
         foregroundColor: Theme.of(context).colorScheme.primary,
-        actions: [IconButton(onPressed: uploadPost, icon: Icon(Icons.upload))],
+        actions: [
+          IconButton(onPressed: uploadPost, icon: const Icon(Icons.upload))
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -126,7 +129,7 @@ class _UploadPostPageState extends State<UploadPostPage> {
               MaterialButton(
                 onPressed: pickImage,
                 color: Colors.blue,
-                child: Text("Pick Image"),
+                child: const Text("Pick Image"),
               ),
               MyTextField(
                   controller: textController,

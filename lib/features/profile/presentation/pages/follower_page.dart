@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, unnecessary_import
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,10 +25,10 @@ class FollowerPage extends StatelessWidget {
               labelColor: Theme.of(context).colorScheme.inversePrimary,
               unselectedLabelColor: Theme.of(context).colorScheme.primary,
               tabs: [
-                Tab(
+                const Tab(
                   text: "Followers",
                 ),
-                Tab(
+                const Tab(
                   text: "Following",
                 )
               ],
@@ -60,11 +62,11 @@ class FollowerPage extends StatelessWidget {
                       return UserTile(user: user);
                     } else if (snapshot.connectionState ==
                         ConnectionState.waiting) {
-                      return ListTile(
+                      return const ListTile(
                         title: Text("Loading..."),
                       );
                     } else {
-                      return ListTile(
+                      return const ListTile(
                         title: Text("User not found.."),
                       );
                     }

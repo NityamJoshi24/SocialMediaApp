@@ -1,3 +1,5 @@
+// ignore_for_file: collection_methods_unrelated_type, avoid_types_as_parameter_names
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -111,6 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     size: 72,
                     color: Theme.of(context).colorScheme.primary,
                   ),
+                  // ignore: non_constant_identifier_names
                   imageBuilder: (context, ImageProvider) => Container(
                     height: 120,
                     width: 120,
@@ -137,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   FollowButton(
                       isFollowing: user.followers.contains(currentUser!.uid),
                       onPressed: followButtonPressed),
-                SizedBox(
+                const SizedBox(
                   height: 25,
                 ),
                 Padding(
@@ -182,7 +185,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                       return ListView.builder(
                         itemCount: postCount,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           final post = userPosts[index];
@@ -195,11 +198,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         },
                       );
                     } else if (state is PostsLoading) {
-                      return Center(
+                      return const Center(
                         child: CircularProgressIndicator(),
                       );
                     } else {
-                      return Center(
+                      return const Center(
                         child: Text("No Posts...."),
                       );
                     }

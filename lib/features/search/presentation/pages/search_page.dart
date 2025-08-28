@@ -50,7 +50,7 @@ class _SearchPageState extends State<SearchPage> {
         builder: (context, state) {
           if (state is SearchLoaded) {
             if (state.users.isEmpty) {
-              return Center(
+              return const Center(
                 child: Text("No Users Found"),
               );
             }
@@ -63,7 +63,7 @@ class _SearchPageState extends State<SearchPage> {
               },
             );
           } else if (state is SearchLoading) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (state is SearchError) {
@@ -71,7 +71,7 @@ class _SearchPageState extends State<SearchPage> {
               child: Text(state.message),
             );
           }
-          return Center(
+          return const Center(
             child: Text("Start Searching for Users"),
           );
         },

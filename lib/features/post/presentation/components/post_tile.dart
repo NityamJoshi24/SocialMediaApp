@@ -92,7 +92,7 @@ class _PostTileState extends State<PostTile> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: Text("Add a new comment"),
+              title: const Text("Add a new comment"),
               content: MyTextField(
                   controller: commentTextController,
                   hintText: "Type a comment",
@@ -100,13 +100,13 @@ class _PostTileState extends State<PostTile> {
               actions: [
                 TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: Text("Cancel")),
+                    child: const Text("Cancel")),
                 TextButton(
                     onPressed: () {
                       addComment();
                       Navigator.of(context).pop();
                     },
-                    child: Text("Add")),
+                    child: const Text("Add")),
               ],
             ));
   }
@@ -135,11 +135,11 @@ class _PostTileState extends State<PostTile> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Delete Post?"),
+        title: const Text("Delete Post?"),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text("Cancel"),
+            child: const Text("Cancel"),
           ),
           TextButton(
             onPressed: () {
@@ -148,7 +148,7 @@ class _PostTileState extends State<PostTile> {
               }
               Navigator.of(context).pop();
             },
-            child: Text("Delete"),
+            child: const Text("Delete"),
           )
         ],
       ),
@@ -176,7 +176,7 @@ class _PostTileState extends State<PostTile> {
                       ? CachedNetworkImage(
                           imageUrl: postUser!.profileImageURL,
                           errorWidget: (context, url, error) =>
-                              Icon(Icons.person),
+                              const Icon(Icons.person),
                           imageBuilder: (context, imageProvider) => Container(
                             width: 40,
                             height: 40,
@@ -186,8 +186,8 @@ class _PostTileState extends State<PostTile> {
                                     image: imageProvider, fit: BoxFit.cover)),
                           ),
                         )
-                      : Icon(Icons.person),
-                  SizedBox(
+                      : const Icon(Icons.person),
+                  const SizedBox(
                     width: 10,
                   ),
                   Text(
@@ -197,7 +197,7 @@ class _PostTileState extends State<PostTile> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   if (isOwnPost)
                     GestureDetector(
                       onTap: showOptions,
@@ -215,10 +215,10 @@ class _PostTileState extends State<PostTile> {
             height: 430,
             width: double.infinity,
             fit: BoxFit.cover,
-            placeholder: (context, url) => SizedBox(
+            placeholder: (context, url) => const SizedBox(
               height: 430,
             ),
-            errorWidget: (context, url, error) => Icon(Icons.error),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
           Padding(
             padding: const EdgeInsets.all(20.0),
@@ -238,7 +238,7 @@ class _PostTileState extends State<PostTile> {
                                 ? Colors.red
                                 : Theme.of(context).colorScheme.primary,
                           )),
-                      SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
                       Text(
@@ -256,7 +256,7 @@ class _PostTileState extends State<PostTile> {
                       Icons.comment,
                       color: Theme.of(context).colorScheme.primary,
                     )),
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
                 Text(
@@ -265,7 +265,7 @@ class _PostTileState extends State<PostTile> {
                       color: Theme.of(context).colorScheme.primary,
                       fontSize: 12),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(widget.post.timestamp.toString())
               ],
             ),
@@ -276,11 +276,11 @@ class _PostTileState extends State<PostTile> {
               children: [
                 Text(
                   widget.post.userName,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Text(
@@ -302,7 +302,7 @@ class _PostTileState extends State<PostTile> {
                   return ListView.builder(
                       itemCount: showCommentCount,
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         final comment = post.comments[index];
 
@@ -312,7 +312,7 @@ class _PostTileState extends State<PostTile> {
               }
 
               if (state is PostsLoading) {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               } else if (state is PostsError) {
@@ -320,7 +320,7 @@ class _PostTileState extends State<PostTile> {
                   child: Text(state.message),
                 );
               } else {
-                return Center(
+                return const Center(
                   child: SizedBox(),
                 );
               }

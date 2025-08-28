@@ -14,6 +14,7 @@ class ConstrainedScaffold extends StatelessWidget {
       drawer: drawer,
       body: Center(
         child: ConstrainedBox(
+          // ignore: prefer_const_constructors
           constraints: BoxConstraints(
             maxWidth: 430,
           ),

@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_import
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:social_media_app/features/profile/domain/entities/profile_user.dart';

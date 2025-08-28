@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/responsive/constrained_scaffold.dart';
@@ -16,12 +15,12 @@ class SettingsPage extends StatelessWidget {
 
     return ConstrainedScaffold(
       appBar: AppBar(
-        title: Text("Settings"),
+        title: const Text("Settings"),
       ),
       body: Column(
         children: [
           ListTile(
-            title: Text("Dark Mode"),
+            title: const Text("Dark Mode"),
             trailing: CupertinoSwitch(
               value: isDarkMode,
               onChanged: (value) {

@@ -48,13 +48,17 @@ class MyDrawer extends StatelessWidget {
                   title: "P R O F I L E"),
               MyDrawerTile(
                   icon: Icons.search,
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SearchPage())),
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SearchPage())),
                   title: "S E A R C H"),
               MyDrawerTile(
                   icon: Icons.settings,
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SettingsPage())),
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SettingsPage())),
                   title: "S E T T I N G S"),
               const Spacer(),
               MyDrawerTile(

@@ -41,23 +41,25 @@ class _HomePageState extends State<HomePage> {
         foregroundColor: Theme.of(context).colorScheme.primary,
         actions: [
           IconButton(
-              onPressed: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => UploadPostPage())),
-              icon: Icon(Icons.add))
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const UploadPostPage())),
+              icon: const Icon(Icons.add))
         ],
       ),
       drawer: const MyDrawer(),
       body: BlocBuilder<PostCubits, PostStates>(
         builder: (context, state) {
           if (state is PostsLoading || state is PostUploading) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (state is PostLoaded) {
             final allPosts = state.posts;
 
             if (allPosts.isEmpty) {
-              return Center(
+              return const Center(
                 child: Text("No Posts Available"),
               );
             }
@@ -77,7 +79,7 @@ class _HomePageState extends State<HomePage> {
               child: Text(state.message),
             );
           } else {
-            return SizedBox();
+            return const SizedBox();
           }
         },
       ),

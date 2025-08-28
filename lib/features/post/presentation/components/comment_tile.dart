@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/presentation/cubits/auth_cubit.dart';
 import 'package:social_media_app/features/post/presentation/cubits/post_cubits.dart';
@@ -34,11 +33,11 @@ class _CommentTileState extends State<CommentTile> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Delete Post?"),
+        title: const Text("Delete Post?"),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text("Cancel"),
+            child: const Text("Cancel"),
           ),
           TextButton(
             onPressed: () {
@@ -47,7 +46,7 @@ class _CommentTileState extends State<CommentTile> {
                   .deleteComment(widget.comment.postId, widget.comment.id);
               Navigator.of(context).pop();
             },
-            child: Text("Delete"),
+            child: const Text("Delete"),
           )
         ],
       ),
@@ -64,15 +63,15 @@ class _CommentTileState extends State<CommentTile> {
         children: [
           Text(
             widget.comment.userName,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Text(widget.comment.text),
-          Spacer(),
+          const Spacer(),
           if (isOwnPost)
             GestureDetector(
                 onTap: showOptions,
@@ -83,6 +82,5 @@ class _CommentTileState extends State<CommentTile> {
         ],
       ),
     );
-    ;
   }
 }

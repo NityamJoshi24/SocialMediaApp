@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings, duplicate_ignore
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:social_media_app/features/post/domain/entities/comment.dart';
 import 'package:social_media_app/features/post/domain/entities/post.dart';
@@ -58,7 +60,7 @@ class FirebasePostRepo implements PostRepo {
     final uniqueUserIds = posts.map((p) => p.userId).toSet().toList();
 
     // DEBUG: Log userIds encountered
-    // ignore: avoid_print
+    // ignore: avoid_print, prefer_interpolation_to_compose_strings
     print('[Posts] filtering by userIds: ' + uniqueUserIds.join(','));
 
     // Firestore whereIn limit is 10, so we batch queries
