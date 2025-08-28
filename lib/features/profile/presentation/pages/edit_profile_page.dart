@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/presentation/components/my_text_field.dart';
 import 'package:social_media_app/features/profile/presentation/cubits/profile_cubit.dart';
 import 'package:social_media_app/features/profile/presentation/cubits/profile_states.dart';
+import 'package:social_media_app/responsive/constrained_scaffold.dart';
 
 import '../../domain/entities/profile_user.dart';
 
@@ -90,7 +91,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget buildEditPage() {
-    return Scaffold(
+    return ConstrainedScaffold(
       appBar: AppBar(
         title: const Text("Edit Profile"),
         foregroundColor: Theme.of(context).colorScheme.primary,

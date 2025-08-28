@@ -12,6 +12,7 @@ import 'package:social_media_app/features/profile/presentation/components/profil
 import 'package:social_media_app/features/profile/presentation/cubits/profile_cubit.dart';
 import 'package:social_media_app/features/profile/presentation/cubits/profile_states.dart';
 import 'package:social_media_app/features/profile/presentation/pages/follower_page.dart';
+import 'package:social_media_app/responsive/constrained_scaffold.dart';
 
 import 'edit_profile_page.dart';
 
@@ -73,7 +74,7 @@ class _ProfilePageState extends State<ProfilePage> {
         if (state is ProfileLoaded) {
           final user = state.profileUser;
 
-          return Scaffold(
+          return ConstrainedScaffold(
             appBar: AppBar(
               title: Text(user.name),
               foregroundColor: Theme.of(context).colorScheme.primary,

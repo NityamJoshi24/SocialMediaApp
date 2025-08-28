@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/presentation/components/my_button.dart';
 import 'package:social_media_app/features/auth/presentation/components/my_text_field.dart';
+import 'package:social_media_app/responsive/constrained_scaffold.dart';
 
 import '../cubits/auth_cubit.dart';
 
@@ -55,7 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
+      child: ConstrainedScaffold(
         body: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25),

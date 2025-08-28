@@ -4,6 +4,7 @@ import 'package:social_media_app/features/home/presentation/components/my_drawer
 import 'package:social_media_app/features/post/presentation/components/post_tile.dart';
 import 'package:social_media_app/features/post/presentation/cubits/post_cubits.dart';
 import 'package:social_media_app/features/post/presentation/cubits/post_states.dart';
+import 'package:social_media_app/responsive/constrained_scaffold.dart';
 
 import '../../../post/presentation/pages/upload_post_page.dart';
 
@@ -34,7 +35,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ConstrainedScaffold(
       appBar: AppBar(
         title: const Text("Home"),
         foregroundColor: Theme.of(context).colorScheme.primary,

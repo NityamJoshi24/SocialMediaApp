@@ -8,6 +8,7 @@ import 'package:social_media_app/features/auth/domain/entities/app_user.dart';
 import 'package:social_media_app/features/auth/presentation/components/my_text_field.dart';
 import 'package:social_media_app/features/post/domain/entities/post.dart';
 import 'package:social_media_app/features/post/presentation/cubits/post_states.dart';
+import 'package:social_media_app/responsive/constrained_scaffold.dart';
 import '../../../auth/presentation/cubits/auth_cubit.dart';
 import '../cubits/post_cubits.dart';
 
@@ -109,7 +110,7 @@ class _UploadPostPageState extends State<UploadPostPage> {
   }
 
   Widget buildUploadPage() {
-    return Scaffold(
+    return ConstrainedScaffold(
       appBar: AppBar(
         title: Text("Create Post"),
         foregroundColor: Theme.of(context).colorScheme.primary,
