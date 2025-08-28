@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/presentation/cubits/auth_cubit.dart';
 import 'package:social_media_app/features/post/presentation/cubits/post_cubits.dart';
-
 import '../../../auth/domain/entities/app_user.dart';
 import '../../domain/entities/comment.dart';
 

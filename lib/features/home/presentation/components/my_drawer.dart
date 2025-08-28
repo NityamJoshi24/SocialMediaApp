@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/presentation/cubits/auth_cubit.dart';
 import 'package:social_media_app/features/home/presentation/components/my_drawer_tile.dart';
 import 'package:social_media_app/features/search/presentation/pages/search_page.dart';
+import 'package:social_media_app/features/settings/pages/settings_page.dart';
 
 import '../../../profile/presentation/pages/profile_page.dart';
 
@@ -51,7 +52,10 @@ class MyDrawer extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => SearchPage())),
                   title: "S E A R C H"),
               MyDrawerTile(
-                  icon: Icons.settings, onTap: () {}, title: "S E T T I N G S"),
+                  icon: Icons.settings,
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SettingsPage())),
+                  title: "S E T T I N G S"),
               const Spacer(),
               MyDrawerTile(
                   icon: Icons.logout_outlined,
